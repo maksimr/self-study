@@ -21,37 +21,37 @@
  * Asynchronous factorial
  */
 	var factorial = function (number, callback) {
-		var cache = factorial.cache[number],
+		var cache = factorial.cache,
+		cacheKey = cache._prefix + number,
 		factorialScope;
-		if (cache) {
-			callback(cache);
+		if (cache[cacheKey]) {
+			callback(cache[cacheKey]);
 			return 0;
 		}
+
+		number = number || 1;
 		/*
      * create own scope for each call
      */
 		factorialScope = function () {
-			number = number || 1;
-
 			factorialScope.id = setTimeout(hitch(factorialScope, function _f(count, number) {
 				var self = this,
-				result = self.tick(count, number);
+				result = count * number;
 
-				if (result !== count) {
+				if (result) {
 					self.id = setTimeout(hitch(self, _f, result, number - 1));
 				} else {
-					self.callback(result);
+					self.callback(count);
 				}
 			},
-			number, number), 10);
+			number, number - 1), 10);
 		};
 
-		factorialScope.tick = factorial.tick;
 		factorialScope.callback = function (result) {
 			/*
        * memoization
        */
-			factorial.cache[number] = result;
+			cache[cacheKey] = result;
 			callback.apply(global, arguments);
 		};
 		/*
@@ -70,13 +70,11 @@
 	};
 
 	/*
- * reusable function
- */
-	factorial.tick = function (count, number) {
-		var n = number && number - 1;
-		return n ? count * n: count;
+   * factorial cache
+   */
+	factorial.cache = {
+		_prefix: '!'
 	};
-	factorial.cache = {};
 
 	/*
  * TESTS
@@ -110,3 +108,4 @@ factorial(3, console.log); // 6
 factorial(0, console.log); // 1
 factorial(10000, console.log); // ??? Infinity
 longExecutions.stop(); // stop long executions
+factorial(100000000000000, console.log); // very long but not blocked script
