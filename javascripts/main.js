@@ -161,8 +161,8 @@
 		/*
      * falling circles
      */
-		var i = 5;
-		for (; i > 0; i--) {
+		var i = 0;
+		for (i = 5; i > 0; i--) {
 			var p = new Polygon(world, {
 				width: Math.random() * 20 + 10,
 				height: Math.random() * 20 + 10,

@@ -4,7 +4,7 @@
  */
 
 (function (global) {
-	define(['dojo'],function () {
+  define(['dojo','./Box2dWeb-2.1.a.3.min'],function () {
 		/*
      * GLOBAL CONSTANTS
      */
