@@ -1,0 +1,8 @@
+/*
+ * load bootstrap
+ */
+@import url('bootstrap/bootstrap.min.css');
+
+section {
+  padding-top: 60px;
+}
